@@ -1,19 +1,44 @@
 plugins {
     id 'java'
+    id 'io.qameta.allure' version '2.12.0'
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
-
+ext {
+    junitJupiterVersion = '5.11.0'
+    allureJunit5Version = '2.29.0'
+    restAssuredVersion = '5.5.0'
+    allureRestAssuredVersion = '2.29.0'
+    jacksonDatabindVersion = '2.17.2'
+    testcontainersSeleniumVersion = '1.20.1'
+    selenideVersion = '7.4.2'
+    allureSelenideVersion = '2.29.0'
+    assertjVersion = '3.26.3'
+    ownerVersion = '1.0.10'
+    lombokVersion = '1.18.30'
+}
 repositories {
     mavenCentral()
 }
-
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "com.codeborne:selenide:${selenideVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter:${junitJupiterVersion}"
+    testImplementation "org.testcontainers:selenium:${testcontainersSeleniumVersion}"
+    testImplementation "io.qameta.allure:allure-selenide:${allureSelenideVersion}"
+    testImplementation "io.qameta.allure:allure-junit5:${allureJunit5Version}"
+    testImplementation "org.assertj:assertj-core:${assertjVersion}"
+    testImplementation "org.aeonbits.owner:owner:${ownerVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 }
 
-test {
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).tap {
+    configureEach {
+        options.encoding = 'UTF-8'
+    }
 }
